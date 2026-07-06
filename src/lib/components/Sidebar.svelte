@@ -72,7 +72,7 @@
   let userMenuOpen = $state(false);
 </script>
 
-<aside class="sidebar-aside">
+<aside class="sidebar-aside" class:open={$ui.sidebarOpen}>
   <!-- 头部：用户信息 -->
   <div class="user-profile-section">
     <div 
@@ -500,5 +500,26 @@
   @keyframes slideDown {
     from { opacity: 0; transform: translateY(-4px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 移动端/手机端滑入侧边栏适配 */
+  @media (max-width: 768px) {
+    .sidebar-aside {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 280px;
+      z-index: 1010;
+      transform: translateX(-100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: none;
+      border-right: 1px solid var(--color-border);
+    }
+
+    .sidebar-aside.open {
+      transform: translateX(0);
+      box-shadow: var(--shadow-xl);
+    }
   }
 </style>

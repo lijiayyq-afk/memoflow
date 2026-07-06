@@ -5,6 +5,7 @@
   import { trash } from '$lib/stores/trash';
   import { goto } from '$app/navigation';
   import Sidebar from '$lib/components/Sidebar.svelte';
+  import { ui } from '$lib/stores/ui';
 
   // 检查登录状态并初始化回收站
   onMount(() => {
@@ -52,6 +53,11 @@
 </script>
 
 <div class="app-layout">
+  <!-- 移动端侧边栏背景遮罩 -->
+  {#if $ui.sidebarOpen}
+    <div class="sidebar-backdrop" onclick={() => ui.setSidebar(false)} role="presentation"></div>
+  {/if}
+
   <!-- 左侧导航侧边栏 -->
   <Sidebar />
 
@@ -59,6 +65,14 @@
   <main class="main-content">
     <!-- 头部区域 -->
     <header class="content-header">
+      <button class="menu-toggle-btn card" onclick={() => ui.toggleSidebar()} title="展开导航">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
       <div class="header-info">
         <h2>回收站</h2>
         <span class="count-tip">共 {$trash.items.length} 条已软删除的笔记</span>
@@ -350,5 +364,62 @@
     background-color: var(--color-primary-light);
     padding: 2px var(--spacing-sm);
     border-radius: var(--radius-round);
+  }
+
+  /* 汉堡菜单按钮样式 */
+  .menu-toggle-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: var(--color-card);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+  }
+
+  .menu-toggle-btn:hover {
+    color: var(--color-text);
+  }
+
+  /* 侧边栏遮罩 */
+  .sidebar-backdrop {
+    display: none;
+  }
+
+  /* 手机/移动端适配样式 */
+  @media (max-width: 768px) {
+    .main-content {
+      padding: var(--spacing-base) var(--spacing-sm);
+    }
+
+    .content-header {
+      gap: var(--spacing-sm);
+      flex-wrap: wrap;
+    }
+
+    .menu-toggle-btn {
+      display: flex;
+    }
+
+    .sidebar-backdrop {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(2px);
+      z-index: 1005;
+    }
+
+    .trash-timeline {
+      max-width: 100%;
+    }
   }
 </style>

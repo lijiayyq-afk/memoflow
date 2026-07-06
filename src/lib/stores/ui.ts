@@ -25,13 +25,16 @@ const defaultState: UIState = {
 };
 
 function createUIStore() {
-  // 从 localStorage 初始化主题和草稿
   let initialTheme: 'light' | 'dark' = 'light';
   let initialDraft = '';
+  let initialSidebarOpen = true;
   
   if (browser) {
     initialTheme = (localStorage.getItem('memoflow_theme') as 'light' | 'dark') || 'light';
     initialDraft = localStorage.getItem('memoflow_draft') || '';
+    if (window.innerWidth < 768) {
+      initialSidebarOpen = false;
+    }
     
     // 应用主题 class 到 html 标签上，以便 CSS 变量支持暗色模式
     document.documentElement.classList.toggle('dark', initialTheme === 'dark');
@@ -40,7 +43,8 @@ function createUIStore() {
   const { subscribe, set, update } = writable<UIState>({
     ...defaultState,
     theme: initialTheme,
-    memoDraft: initialDraft
+    memoDraft: initialDraft,
+    sidebarOpen: initialSidebarOpen
   });
 
   // 1. 侧边栏操作
