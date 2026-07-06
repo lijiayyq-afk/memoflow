@@ -7,6 +7,7 @@
   import TagTree from './TagTree.svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
+  import { ui } from '$lib/stores/ui';
 
   // 计算使用天数
   let daysUsed = $derived.by(() => {
