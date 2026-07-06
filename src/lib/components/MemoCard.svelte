@@ -18,6 +18,11 @@
   let menuOpen = $state(false); // 控制下拉菜单的展开/关闭
   let activePreviewUrl = $state<string | null>(null); // 灯箱大图预览地址
   let contentEl = $state<HTMLElement | null>(null); // 笔记正文 DOM 引用
+  
+  // 展开与折叠局部状态
+  let isExpanded = $state(false);
+  let textLength = $derived(memo.content.replace(/<[^>]*>/g, '').length);
+  let shouldCollapse = $derived(textLength > 160);
 
   // 计算属性：过滤出所有的图片资源
   const images = $derived((memo.resources || []).filter(res => res.mimeType.startsWith('image/')));
@@ -168,9 +173,15 @@
     title="双击进行编辑"
   >
     <!-- 富文本 HTML 内容 -->
-    <div class="memo-content" bind:this={contentEl}>
+    <div class="memo-content" class:collapsed-content={shouldCollapse && !isExpanded} bind:this={contentEl}>
       {@html memo.content}
     </div>
+
+    {#if shouldCollapse}
+      <button class="expand-btn" onclick={(e) => { e.stopPropagation(); isExpanded = !isExpanded; }}>
+        {isExpanded ? '收起' : '展开'}
+      </button>
+    {/if}
 
     <!-- 标签列表 -->
     {#if memo.tags && memo.tags.length > 0}
@@ -382,8 +393,8 @@
     margin-top: var(--spacing-md);
   }
   .tag-badge {
-    background-color: var(--color-primary-light);
-    color: var(--color-primary);
+    background-color: #EEF2FF;
+    color: #4F46E5;
     font-size: var(--fs-xs);
     padding: 2px 8px;
     border-radius: var(--radius-round);
@@ -393,7 +404,7 @@
     transition: background-color var(--transition-fast), color var(--transition-fast);
   }
   .tag-badge:hover {
-    background-color: var(--color-primary);
+    background-color: #4F46E5;
     color: #FFFFFF;
   }
 
@@ -471,5 +482,31 @@
   }
   .lightbox-close-btn:hover {
     background: rgba(255, 255, 255, 0.3);
+  }
+
+  /* 折叠/展开样式 */
+  .collapsed-content {
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .expand-btn {
+    border: none;
+    background: none;
+    color: #4F46E5;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    cursor: pointer;
+    padding: var(--spacing-xs) 0;
+    margin-top: var(--spacing-xs);
+    display: inline-block;
+    transition: color var(--transition-fast);
+  }
+
+  .expand-btn:hover {
+    color: #3b82f6;
   }
 </style>

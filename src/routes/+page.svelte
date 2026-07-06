@@ -10,6 +10,10 @@
   import MemoEditor from '$lib/components/MemoEditor.svelte';
   import MemoList from '$lib/components/MemoList.svelte';
   import SearchModal from '$lib/components/SearchModal.svelte';
+  import { fade, fly } from 'svelte/transition';
+  
+  // 移动端输入框浮层显隐
+  let showMobileEditor = $state(false);
 
   // 挂载时初始化状态
   onMount(() => {
@@ -71,8 +75,10 @@
 
   <!-- 主体时间线工作区 -->
   <main class="main-content">
-    <!-- 顶栏：搜索与状态栏 -->
-    <header class="timeline-header">
+    <!-- 顶栏：PC端与手机端响应式分流展示 -->
+    
+    <!-- 1. 桌面端特有长条搜索顶栏 -->
+    <header class="timeline-header desktop-header">
       <button class="menu-toggle-btn card" onclick={() => ui.toggleSidebar()} title="展开导航">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -104,6 +110,39 @@
         {/if}
       </div>
     </header>
+
+    <!-- 2. 移动端 1:1 原版复刻顶栏 -->
+    <header class="timeline-header mobile-header">
+      <button class="icon-circle-btn" onclick={() => ui.toggleSidebar()} title="展开侧边栏">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+      
+      <div class="brand-title">
+        <span>flomo</span>
+        <svg class="dropdown-arrow" viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+      
+      <button class="icon-circle-btn" onclick={() => ui.setSearch(true)} title="全局搜索">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </button>
+    </header>
+
+    <!-- 3. 移动端特有快捷功能导航栏 -->
+    <div class="mobile-quick-actions">
+      <button class="quick-btn card">
+        <span class="icon">🧭</span>
+        <span class="label">AI 洞察</span>
+        <span class="red-dot"></span>
+      </button>
+      <button class="quick-btn card">
+        <span class="icon">✦</span>
+        <span class="label">每日回顾</span>
+      </button>
+      <button class="quick-btn card">
+        <span class="icon">👣</span>
+        <span class="label">随机漫步</span>
+      </button>
+    </div>
 
     <!-- 当前筛选面包屑 -->
     {#if $memoFilter.tag || $memoFilter.specialFilter || $memoFilter.search}
@@ -138,14 +177,35 @@
 
     <!-- 时间线主内容区 -->
     <div class="timeline-container">
-      <!-- 笔记发布框 -->
-      <MemoEditor />
+      <!-- 笔记发布框 (仅在桌面端常驻，移动端改由悬浮按钮调起) -->
+      <div class="desktop-editor-wrapper">
+        <MemoEditor />
+      </div>
 
       <!-- 笔记流列表 -->
       <MemoList />
     </div>
   </main>
 </div>
+
+<!-- 4. 手机端绿色浮动添加按钮 (FAB) -->
+<button class="floating-add-btn" onclick={() => showMobileEditor = true} title="写卡片">
+  <svg viewBox="0 0 24 24" width="24" height="24" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+</button>
+
+<!-- 5. 手机端底部滑入便签编辑器 (Drawer) -->
+{#if showMobileEditor}
+  <div class="drawer-backdrop" onclick={() => showMobileEditor = false} transition:fade={{ duration: 120 }} role="presentation"></div>
+  <div class="drawer-content card" transition:fly={{ y: 450, duration: 250 }}>
+    <div class="drawer-header flex justify-between align-center">
+      <h3>新建便签</h3>
+      <button class="close-drawer-btn" onclick={() => showMobileEditor = false}>✕</button>
+    </div>
+    <div class="drawer-body">
+      <MemoEditor onsaved={() => showMobileEditor = false} />
+    </div>
+  </div>
+{/if}
 
 <!-- 全局快捷搜索组件 -->
 <SearchModal />
@@ -330,6 +390,194 @@
     /* 限制输入框和卡片在小屏下两边不留过多白 */
     .timeline-container, .timeline-header, .filter-badges-container {
       max-width: 100%;
+    }
+  }
+
+  /* 桌面/移动端元素响应式显示切换 */
+  .desktop-header {
+    display: flex;
+  }
+  .mobile-header {
+    display: none;
+  }
+  .mobile-quick-actions {
+    display: none;
+  }
+  .desktop-editor-wrapper {
+    display: block;
+  }
+  .floating-add-btn {
+    display: none;
+  }
+  .drawer-backdrop {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .desktop-header {
+      display: none !important;
+    }
+    
+    .mobile-header {
+      display: flex !important;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: 52px;
+      padding: 0 var(--spacing-base);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius-lg);
+      background-color: var(--color-card);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .icon-circle-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-round);
+      background-color: #f1f2f4;
+      border: none;
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color var(--transition-fast);
+    }
+    .icon-circle-btn:active {
+      background-color: var(--color-border);
+    }
+
+    .brand-title {
+      font-size: var(--fs-md);
+      font-weight: var(--fw-bold);
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    
+    .dropdown-arrow {
+      color: var(--color-text-secondary);
+      margin-top: 1px;
+    }
+
+    /* 快捷选项栏 */
+    .mobile-quick-actions {
+      display: flex !important;
+      gap: var(--spacing-sm);
+      width: 100%;
+      margin-bottom: var(--spacing-base);
+    }
+
+    .quick-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-xs);
+      height: 36px;
+      border: 1px solid var(--color-border);
+      background-color: var(--color-card);
+      border-radius: var(--radius-lg);
+      font-size: var(--fs-sm);
+      color: var(--color-text);
+      position: relative;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .quick-btn .red-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--color-danger);
+      border-radius: var(--radius-round);
+      position: absolute;
+      top: 6px;
+      right: 12px;
+    }
+
+    .desktop-editor-wrapper {
+      display: none !important;
+    }
+
+    /* 底部绿色悬浮 + 号 (FAB) */
+    .floating-add-btn {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-round);
+      background-color: var(--color-primary);
+      box-shadow: 0 4px 16px rgba(43, 190, 115, 0.45);
+      border: none;
+      z-index: 999;
+      cursor: pointer;
+      transition: background-color var(--transition-fast), transform var(--transition-fast);
+    }
+    .floating-add-btn:active {
+      transform: translateX(-50%) scale(0.92);
+      background-color: var(--color-primary-hover);
+    }
+
+    /* 编辑器 Drawer */
+    .drawer-backdrop {
+      display: block !important;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(1.5px);
+      z-index: 1008;
+    }
+
+    .drawer-content {
+      display: flex !important;
+      flex-direction: column;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: var(--color-card);
+      border-top-left-radius: var(--radius-lg);
+      border-top-right-radius: var(--radius-lg);
+      z-index: 1009;
+      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.15);
+      padding: var(--spacing-base);
+      max-height: 85vh;
+    }
+
+    .drawer-header {
+      margin-bottom: var(--spacing-sm);
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: var(--spacing-sm);
+    }
+    .drawer-header h3 {
+      font-size: var(--fs-md);
+      font-weight: var(--fw-semibold);
+      color: var(--color-text);
+    }
+
+    .close-drawer-btn {
+      font-size: var(--fs-md);
+      color: var(--color-text-secondary);
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    .drawer-body {
+      overflow-y: auto;
+      flex: 1;
+      padding-top: var(--spacing-xs);
     }
   }
 </style>

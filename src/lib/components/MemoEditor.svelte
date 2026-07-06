@@ -9,6 +9,12 @@
   let content = $state('');
   // 暂存上传成功的文件资源列表
   let uploadedResources = $state<{ id: string; filename: string; mimeType: string; url: string }[]>([]);
+  // Props 属性声明：支持 onsaved 回调
+  let { 
+    onsaved 
+  }: { 
+    onsaved?: () => void 
+  } = $props();
   // 上传 loading 状态
   let uploading = $state(false);
   
@@ -118,6 +124,7 @@
       // 清空状态
       content = '';
       uploadedResources = [];
+      if (onsaved) onsaved();
     } catch (err: any) {
       alert(err.message || '保存笔记失败');
     }
