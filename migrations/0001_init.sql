@@ -6,6 +6,7 @@ CREATE TABLE users (
   id            TEXT PRIMARY KEY,
   username      TEXT NOT NULL UNIQUE,
   password_hash TEXT NOT NULL,
+  email         TEXT,
   display_name  TEXT NOT NULL,
   avatar_url    TEXT,
   created_at    TEXT NOT NULL DEFAULT (datetime('now')),
