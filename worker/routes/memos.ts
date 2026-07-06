@@ -268,6 +268,11 @@ memosRouter.delete('/:id', async (c) => {
 // 5. R2 附件文件上传 API
 memosRouter.post('/upload', async (c) => {
   const user = c.get('user')!;
+  
+  if (!c.env.BUCKET) {
+    return c.json({ success: false, message: '图片存储服务未启用，请在 Cloudflare Dashboard 中开通并绑定 R2' }, 400);
+  }
+
   const formData = await c.req.parseBody();
   const file = formData.file;
 
@@ -307,6 +312,11 @@ memosRouter.post('/upload', async (c) => {
 // 6. R2 附件下载
 memosRouter.get('/resources/:key{.+}', async (c) => {
   const key = c.req.param('key');
+  
+  if (!c.env.BUCKET) {
+    return c.json({ success: false, message: '图片存储服务未启用' }, 400);
+  }
+
   const object = await c.env.BUCKET.get(key);
 
   if (!object) {

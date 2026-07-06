@@ -33,3 +33,5 @@ worker/node_modules/
 .wrangler/
 dist/
 build/
+
+.vercel

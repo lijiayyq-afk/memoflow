@@ -1,19 +1,20 @@
 name = "memoflow-backend"
 main = "index.ts"
 compatibility_date = "2024-01-01"
+compatibility_flags = [ "nodejs_compat" ]
 
 [vars]
 JWT_SECRET = "memoflow-super-secret-key"
 
 [[kv_namespaces]]
 binding = "KV"
-id = "memoflow_kv_placeholder"
+id = "18952ebd63dd4fd6a45e385847b20162"
 
-[[r2_buckets]]
-binding = "BUCKET"
-bucket_name = "memoflow-bucket-placeholder"
+# [[r2_buckets]]
+# binding = "BUCKET"
+# bucket_name = "memoflow-attachments"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "memoflow-db"
-database_id = "memoflow_db_placeholder"
+database_id = "5aae27f9-3852-47a8-a184-369edb9ce67b"

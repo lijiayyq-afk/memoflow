@@ -2,8 +2,8 @@
 
 import { browser } from '$app/environment';
 
-// 默认 API 前缀，Workers 环境下通常与 SvelteKit 同域部署在 /api 下
-const API_BASE = '/api';
+// 默认 API 前缀，指向已成功部署的 Cloudflare Workers 后端服务
+const API_BASE = 'https://memoflow-backend.lijiayyq.workers.dev/api';
 
 export class ApiError extends Error {
   status: number;
