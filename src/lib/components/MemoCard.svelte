@@ -172,6 +172,17 @@
     role="article"
     title="双击进行编辑"
   >
+    <!-- 标签列表 (1:1 提升至正文上方) -->
+    {#if memo.tags && memo.tags.length > 0}
+      <div class="memo-tags flex flex-wrap gap-xs">
+        {#each memo.tags as tag}
+          <button class="tag-badge" onclick={(e) => handleTagClick(e, tag)}>
+            #{tag}
+          </button>
+        {/each}
+      </div>
+    {/if}
+
     <!-- 富文本 HTML 内容 -->
     <div class="memo-content" class:collapsed-content={shouldCollapse && !isExpanded} bind:this={contentEl}>
       {@html memo.content}
@@ -181,17 +192,6 @@
       <button class="expand-btn" onclick={(e) => { e.stopPropagation(); isExpanded = !isExpanded; }}>
         {isExpanded ? '收起' : '展开'}
       </button>
-    {/if}
-
-    <!-- 标签列表 -->
-    {#if memo.tags && memo.tags.length > 0}
-      <div class="memo-tags flex flex-wrap gap-xs">
-        {#each memo.tags as tag}
-          <button class="tag-badge" onclick={(e) => handleTagClick(e, tag)}>
-            #{tag}
-          </button>
-        {/each}
-      </div>
     {/if}
 
     <!-- 图片缩略图网格 -->
@@ -356,8 +356,8 @@
   }
   .memo-content {
     font-size: var(--fs-base);
-    line-height: var(--lh-loose);
-    color: var(--color-text);
+    line-height: 1.7;                  /* 1:1 还原加宽行高 */
+    color: #333333;                   /* 1:1 还原舒适深灰字色 */
     word-break: break-all;
   }
   
@@ -390,7 +390,8 @@
     gap: var(--spacing-xs);
   }
   .memo-tags {
-    margin-top: var(--spacing-md);
+    margin-top: 4px;                  /* 1:1 缩小至时间戳的间距 */
+    margin-bottom: 8px;                /* 1:1 增加与正文的间距 */
   }
   .tag-badge {
     background-color: #EEF2FF;

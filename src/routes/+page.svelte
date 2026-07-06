@@ -422,21 +422,27 @@
       display: flex !important;
       align-items: center;
       justify-content: space-between;
-      width: 100%;
-      height: 52px;
+      width: calc(100% + 16px) !important;
+      margin-left: -8px !important;
+      margin-right: -8px !important;
+      height: 50px;
       padding: 0 var(--spacing-base);
-      border: 1px solid var(--color-border);
-      box-shadow: var(--shadow-sm);
-      border-radius: var(--radius-lg);
+      border: none !important;
+      border-bottom: 1px solid #E8E8E8 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
       background-color: var(--color-card);
-      margin-bottom: var(--spacing-sm);
+      margin-bottom: 0 !important;
+      position: sticky;
+      top: -8px;
+      z-index: 999;
     }
 
     .icon-circle-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: var(--radius-round);
-      background-color: #f1f2f4;
+      width: 34px;
+      height: 34px;
+      border-radius: 50% !important;
+      background-color: #F1F3F5 !important;
       border: none;
       color: var(--color-text);
       display: flex;
@@ -451,58 +457,61 @@
 
     .brand-title {
       font-size: var(--fs-md);
-      font-weight: var(--fw-bold);
+      font-weight: var(--fw-semibold);
       color: var(--color-text);
       display: flex;
       align-items: center;
-      gap: 2px;
+      gap: 3px;
     }
     
     .dropdown-arrow {
       color: var(--color-text-secondary);
-      margin-top: 1px;
+      margin-top: 2px;
     }
 
-    /* 快捷选项栏 */
+    /* 快捷选项栏 (1:1 居中与圆角药丸自适应宽度) */
     .mobile-quick-actions {
       display: flex !important;
-      gap: var(--spacing-sm);
+      justify-content: center;
+      gap: 10px;
       width: 100%;
-      margin-bottom: var(--spacing-base);
+      margin-top: 12px !important;
+      margin-bottom: 12px !important;
     }
 
     .quick-btn {
-      flex: 1;
+      flex: none !important;          /* 1:1 取消宽度平分，改为自适应 */
       display: flex;
       align-items: center;
       justify-content: center;
       gap: var(--spacing-xs);
-      height: 36px;
-      border: 1px solid var(--color-border);
+      height: 32px;
+      padding: 0 14px !important;
+      border: 1px solid rgba(0, 0, 0, 0.04) !important;
       background-color: var(--color-card);
-      border-radius: var(--radius-lg);
-      font-size: var(--fs-sm);
-      color: var(--color-text);
+      border-radius: var(--radius-round) !important;
+      font-size: var(--fs-xs) !important;
+      color: #333333;
       position: relative;
       cursor: pointer;
-      box-shadow: var(--shadow-sm);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
     }
 
     .quick-btn .red-dot {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       background-color: var(--color-danger);
-      border-radius: var(--radius-round);
+      border-radius: 50%;
       position: absolute;
       top: 6px;
-      right: 12px;
+      right: 8px;
     }
 
     .desktop-editor-wrapper {
       display: none !important;
     }
 
-    /* 底部绿色悬浮 + 号 (FAB) */
+    /* 底部绿色悬浮 + 号 (1:1 还原为圆角正方形 FAB) */
     .floating-add-btn {
       display: flex !important;
       align-items: center;
@@ -511,11 +520,11 @@
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%);
-      width: 56px;
-      height: 56px;
-      border-radius: var(--radius-round);
+      width: 50px;                               /* 1:1 调小尺寸 */
+      height: 50px;                              /* 1:1 调小尺寸 */
+      border-radius: 16px !important;            /* 1:1 改为高圆角正方形 */
       background-color: var(--color-primary);
-      box-shadow: 0 4px 16px rgba(43, 190, 115, 0.45);
+      box-shadow: 0 4px 14px rgba(43, 190, 115, 0.4);
       border: none;
       z-index: 999;
       cursor: pointer;
