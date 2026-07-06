@@ -35,8 +35,8 @@ authRouter.post('/register', async (c) => {
   const now = Date.now();
 
   await c.env.DB.prepare(
-    'INSERT INTO users (id, username, password_hash, email, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)'
-  ).bind(userId, username, passwordHash, email || null, now, now).run();
+    'INSERT INTO users (id, username, password_hash, email, display_name, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+  ).bind(userId, username, passwordHash, email || null, username, now, now).run();
 
   return c.json({
     success: true,
