@@ -1,0 +1,81 @@
+/* variables.css - 全局 CSS 变量定义，符合 MemoFlow 设计规范 */
+
+:root {
+  /* 色彩系统 */
+  --color-primary: #2BBE73;          /* flomo绿 */
+  --color-primary-hover: #229D5E;    /* 悬浮态主色 */
+  --color-primary-light: #EAFCF1;    /* 轻量主色背景 */
+  --color-bg: #F7F8FA;               /* 全局底色 */
+  --color-card: #FFFFFF;             /* 卡片背景 */
+  --color-text: #1A1A1A;             /* 主文本色 */
+  --color-text-secondary: #8C8C8C;   /* 次要文本色 */
+  --color-text-placeholder: #BFBFBF; /* 占位符文本色 */
+  --color-border: #E8E8E8;           /* 边框色 */
+  --color-border-hover: #D0D0D0;     /* 悬浮边框色 */
+  
+  /* 功能色 */
+  --color-danger: #FF4D4F;           /* 危险/警告红 */
+  --color-danger-hover: #E03A3C;     
+  --color-danger-light: #FFF1F0;     
+  --color-warning: #FAAD14;          /* 警示黄 */
+  --color-info: #1890FF;             /* 信息蓝 */
+  --color-success: #52C41A;          /* 成功绿 */
+
+  /* 字体系统 */
+  --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  
+  /* 字号定义 */
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-base: 14px;
+  --fs-md: 16px;
+  --fs-lg: 18px;
+  --fs-xl: 20px;
+  --fs-2xl: 24px;
+
+  /* 字重定义 */
+  --fw-normal: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* 行高定义 */
+  --lh-tight: 1.25;
+  --lh-base: 1.5;
+  --lh-loose: 1.75;
+
+  /* 间距系统 */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-base: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+
+  /* 圆角系统 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-round: 9999px;
+
+  /* 阴影系统 */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 8px 24px 0 rgba(0, 0, 0, 0.08);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+  /* 动画过渡 */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-slow: 0.35s ease;
+  --transition-elastic: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* 布局参数 */
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 64px;
+  --header-height: 56px;
+  --max-width: 1200px;
+}

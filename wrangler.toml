@@ -1,0 +1,21 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "memoflow"
+compatibility_date = "2024-04-03"
+pages_build_output_dir = ".svelte-kit/cloudflare"
+
+# D1 数据库绑定
+[[d1_databases]]
+binding = "DB"
+database_name = "memoflow-db"
+database_id = "4f8a9e7d-b6c2-482a-a951-dc4a7f0e8f3b"
+migrations_dir = "migrations"
+
+# R2 存储桶绑定
+[[r2_buckets]]
+binding = "MEMOFLOW_R2"
+bucket_name = "memoflow-attachments"
+
+# KV 命名空间绑定
+[[kv_namespaces]]
+binding = "MEMOFLOW_KV"
+id = "a6c2f9d5-7b81-426c-8fe4-91d84b0e5d9c"

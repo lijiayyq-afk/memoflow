@@ -1,0 +1,188 @@
+/* animations.css - 全局过渡动效与微动效库 */
+
+/* 1. 关键帧定义 */
+
+/* 淡入 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 淡出 */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* 向上滑入（带弹性） */
+@keyframes slideInUpElastic {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+  60% {
+    opacity: 0.8;
+    transform: translateY(-4px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 向下滑出 */
+@keyframes slideOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+/* 从左侧滑入（侧边栏） */
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* 向左侧滑出（侧边栏） */
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* 从右侧滑入（设置/详情面板） */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* 骨架屏扫光闪烁 */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* 呼吸效果 */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 旋转效果（加载中） */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* 2. 动效实用类 */
+
+.animate-fade-in {
+  animation: fadeIn var(--transition-base) forwards;
+}
+
+.animate-fade-out {
+  animation: fadeOut var(--transition-base) forwards;
+}
+
+.animate-slide-up-elastic {
+  animation: slideInUpElastic var(--transition-elastic) forwards;
+}
+
+.animate-slide-down-out {
+  animation: slideOutDown var(--transition-base) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft var(--transition-base) cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight var(--transition-base) cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+/* 骨架屏背景 */
+.skeleton {
+  background: linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 37%, #f2f2f2 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+
+/* 3. 悬浮与活跃交互（微动效） */
+
+/* 按钮点击缩放反馈 */
+.btn-active-scale {
+  transition: transform var(--transition-fast);
+}
+
+.btn-active-scale:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+/* 浮动卡片悬浮提升 */
+.hover-lift {
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* 标签悬浮微变色 */
+.tag-hover {
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.tag-hover:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
