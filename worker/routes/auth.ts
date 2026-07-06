@@ -34,14 +34,30 @@ authRouter.post('/register', async (c) => {
   const passwordHash = await hashPassword(password);
   const now = Date.now();
 
+  // 1. 写入数据库 (含 display_name)
   await c.env.DB.prepare(
     'INSERT INTO users (id, username, password_hash, email, display_name, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
   ).bind(userId, username, passwordHash, email || null, username, now, now).run();
 
+  // 2. 注册成功后自动签发 JWT 实现自动登录
+  const exp = Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60;
+  const payload = {
+    userId: userId,
+    username: username,
+    exp: exp
+  };
+  const token = await sign(payload, c.env.JWT_SECRET);
+
+  // 3. 将会话记录至 KV
+  await c.env.KV.put(`session:${userId}`, token, {
+    expirationTtl: 7 * 24 * 60 * 60
+  });
+
   return c.json({
     success: true,
     message: 'User registered successfully',
-    data: { userId, username }
+    token,
+    user: { id: userId, username }
   }, 201);
 });
 
@@ -66,7 +82,7 @@ authRouter.post('/login', async (c) => {
     return c.json({ success: false, message: 'Invalid username or password' }, 401);
   }
 
-  // 登录成功，生成 JWT Token (7天过期)
+  // 登录成功，生成 JWT Token (7天预设过期)
   const exp = Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60;
   const payload = {
     userId: user.id,
@@ -75,20 +91,19 @@ authRouter.post('/login', async (c) => {
   };
   const token = await sign(payload, c.env.JWT_SECRET);
 
-  // 记录会话在 KV 中，Key 为 `session:<userId>`，设置过期时间
+  // 记录会话在 KV 中，设置过期时间
   await c.env.KV.put(`session:${user.id}`, token, {
     expirationTtl: 7 * 24 * 60 * 60
   });
 
+  // 扁平返回结构，无缝对接前端解构
   return c.json({
     success: true,
     message: 'Login successful',
-    data: {
-      token,
-      user: {
-        id: user.id,
-        username: user.username
-      }
+    token,
+    user: {
+      id: user.id,
+      username: user.username
     }
   });
 });
